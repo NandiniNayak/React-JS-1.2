@@ -12,32 +12,66 @@ class App extends Component {
   // state is available only in class which is extended from component class
   state = {
     persons: [
-      { name: "Nands", age: 28},
-      { name: "Alex", age: 25},
-      { name: "Steph", age:25}
-    ]
+      { id: 'asf', name: "Nands", age: 28},
+      { id: 'ghi', name: "Alex", age: 25},
+      { id: 'kil', name: "Steph", age:25}
+    ],
+    showPersons: false // if false don't show the person, (render dynamically)
   }
 
-switchNameHandler = (newName) => {
-  // console.log('was clicked');
-  // DON'T DO THIS:this.state.persons[0].name = "Nandini Nayak"
-  this.setState ({
-    persons: [
-      {name: newName, age: 28},
-      { name: "Alex", age: 25},
-      { name: "Steph", age: 28}
-    ]
-  })
-}
+// switchNameHandler = (newName) => {
+//   // console.log('was clicked');
+//   // DON'T DO THIS:this.state.persons[0].name = "Nandini Nayak"
+//   this.setState ({
+//     persons: [
+//       {name: newName, age: 28},
+//       { name: "Alex", age: 25},
+//       { name: "Steph", age: 28}
+//     ]
+//   })
+// }
 // input element from person js, value eneterd into the input field must be used as new name, event object will hold the info entered in input field
-nameChangeHandler = (event) => {
-  this.setState ({
-    persons: [
-      {name: "Nands", age: 28},
-      { name: event.target.value, age: 25},
-      { name: "Steph", age: 26}
-    ]
-  })
+// add a unique id as key while manipulating array
+nameChangeHandler = (event, id) => {
+  // find index return index of the first e;ement that passes the test
+  const personIndex = this.state.persons.findIndex(p => {
+    // check if the id of the person passed matches any in the array, if so return true
+    return p.id === id;
+  });
+
+  // objects are pass by ref hence use spread operator for a immutable property to pass the person object whose id was passed
+  const person = {
+    ...this.state.persons[personIndex]
+  };
+
+  // or ES5 way without spread operator
+  // const person = Object.assign({}, this.state.persons[personIndex]);
+
+  person.name = event.target.value;
+
+  const persons = [...this.state.persons];
+  // updated person array
+  persons[personIndex] = person;
+
+  this.setState ( { persons: persons} )
+
+}
+// upon clickinge ach person deletePersonHandler is called to delete that particular person
+deletePersonHandler = (personIndex) => {
+  // fetch all persons
+  // const persons = this.state.persons.slice();
+  // allternate to this is spread operator : creates a new copy instead of accessing original array via reference;
+  //Always update state in react in immutable fashion
+  const persons = [...this.state.persons];
+  // splice one element from array based on the index
+  persons.splice(personIndex, 1);
+  // update the new array in to the persons state
+  this.setState({persons: persons})
+}
+// call this method on event triggered in the DOM, to toggle state of showPersons
+togglePersonsHandler = () => {
+  const doesShow = this.state.showPersons;
+  this.setState({showPersons: !doesShow});
 }
   render() {
     // JSx - syntax
@@ -53,21 +87,39 @@ nameChangeHandler = (event) => {
       cursor: 'pointer'
     };
 
+    let persons = null;
+
+    if (this.state.showPersons) {
+      persons = (
+        <div>
+        {/*function passed to map method is applied on every element in the array*/}
+          {this.state.persons.map((person, index) => {
+              return <Person
+                click={() => this.deletePersonHandler(index)}
+                name={person.name}
+                age={person.age}
+                key={person.id}
+                changed={(event) => this.nameChangeHandler(event, person.id)} />
+          })}
+        </div>
+      );
+    }
+    // Lesson1.2 - to conditinally render a section of html, wrap the lists in the div
     return (
       <div className="App">
         <h1>Hi, I am a react App</h1>
         <h1> This is working!</h1>
         <button
           style={style}
-          onClick={this.switchNameHandler.bind(this, "Nandini Nayak")}>Switch Name </button>
-        <Person
-          name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-        <Person
-          name={this.state.persons[1].name} age={this.state.persons[1].age}
-          click={this.switchNameHandler.bind(this, 'Nands!!')}
-          changed={this.nameChangeHandler} > My Hobbies: Gaming</Person>
-        <Person
-          name={this.state.persons[2].name} age={this.state.persons[2].age}/>
+          onClick={this.togglePersonsHandler}>Switch Name </button>
+          {  /* this is comment:render content conditionally with {}
+          note: block statements, such as if{} cannot be used inbetween dynamic syntax of { html } in js
+          check if the show persons is true or false
+          note: if else case here is written in js format
+          condition ? htmlcontent : else case (null)
+          */}
+        {persons}
+
       </div>
       //<h1> Another heading </h1> // not allowed, must go into div
     );
