@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import './App.css';
-import Radium, { StyleRoot } from 'radium'
+import classes from './App.css';
+// import Radium, { StyleRoot } from 'radium'
 // import person css to js
 import Person from './Person/Person';
 // import person component , note: name must be uppercase, eg: Person, in JSX lower case elements are reserved for html
@@ -86,11 +86,7 @@ togglePersonsHandler = () => {
       font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
-      cursor: 'pointer',
-      ':hover': {
-        backgroundColor: 'lightgreen',
-        color: 'black'
-      }
+      cursor: 'pointer'
     };
 
     let persons = null;
@@ -118,22 +114,21 @@ togglePersonsHandler = () => {
       }
     };
 
-    let classes = [];
+    const  assignedClasses = [];
     // less than 2 people, push red class into the array
     if (this.state.persons.length <= 2) {
-      classes.push('red'); //classes = ['red']
+      assignedClasses.push( classes.red ); //classes = ['red']
     }
     if (this.state.persons.length <= 1 ) {
-      classes.push('bold'); //classes = ['red', 'bold']
+      assignedClasses.push( classes.bold ); //classes = ['red', 'bold']
     }
 
     // Lesson1.2 - to conditinally render a section of html, wrap the lists in the div
     // wrap in style root to apply radium with media queries
     return (
-      <StyleRoot>
-        <div className="App">
+        <div className={classes.App}>
           <h1>Hi, I am a react App</h1>
-          <p className={classes.join(' ')}> This is really  working!</p>
+          <p className={assignedClasses.join(' ')}> This is really  working!</p>
           <button
             style={style}
             onClick={this.togglePersonsHandler}>Switch Name </button>
@@ -144,9 +139,8 @@ togglePersonsHandler = () => {
             condition ? htmlcontent : else case (null)
             */}
           {persons}
-
         </div>
-      </StyleRoot>
+
       //<h1> Another heading </h1> // not allowed, must go into div
     );
     // or - above Jsx syntax, gets compiled to
@@ -155,4 +149,4 @@ togglePersonsHandler = () => {
 }
 
 // by default while importing irrespective of the name used, since App is default, its always refered to this one
-export default Radium(App);
+export default App;
