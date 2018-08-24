@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import classes from './App.css';
 // import Radium, { StyleRoot } from 'radium'
 // import person css to js
 import Person from './Person/Person';
@@ -114,21 +114,21 @@ togglePersonsHandler = () => {
       }
     };
 
-    let classes = [];
+    const  assignedClasses = [];
     // less than 2 people, push red class into the array
     if (this.state.persons.length <= 2) {
-      classes.push('red'); //classes = ['red']
+      assignedClasses.push( classes.red ); //classes = ['red']
     }
     if (this.state.persons.length <= 1 ) {
-      classes.push('bold'); //classes = ['red', 'bold']
+      assignedClasses.push( classes.bold ); //classes = ['red', 'bold']
     }
 
     // Lesson1.2 - to conditinally render a section of html, wrap the lists in the div
     // wrap in style root to apply radium with media queries
     return (
-        <div className="App">
+        <div className={classes.App}>
           <h1>Hi, I am a react App</h1>
-          <p className={classes.join(' ')}> This is really  working!</p>
+          <p className={assignedClasses.join(' ')}> This is really  working!</p>
           <button
             style={style}
             onClick={this.togglePersonsHandler}>Switch Name </button>

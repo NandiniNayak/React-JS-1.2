@@ -2,7 +2,7 @@ import React from 'react';
 // import Radium from 'radium';
 
 // need the file extension (.css) can only omit for app.js
-import './Person.css'
+import classes from  './Person.css'
 // create component: component is a fuction that returns ISX
 const person = (props) => {
   // const style = {
@@ -15,7 +15,7 @@ const person = (props) => {
   // access the switch handler function in another file via click property
   // access the nameHandler via changed method in the app.js file
   return (
-    <div className="Person">
+    <div className={classes.Person}>
         <p onClick={props.click}>I am {props.name} and I am {props.age} years old!</p>
         <p>{props.children}</p>
         <input type="text" onChange={props.changed} value={props.name}/>
